@@ -31,7 +31,7 @@ class MessagesController extends Controller
      */
     public function create()
     {
-        $message = Message;
+        $message = new Message;
         
          // メッセージ作成ビューを表示
         return view('messages.create', [
@@ -47,6 +47,12 @@ class MessagesController extends Controller
      */
     public function store(Request $request)
     {
+         // バリデーション
+        $request->validate([
+            'content' => 'required|max:255',
+        ]);
+
+        
         // メッセージを作成
         $message = new Message;
         $message->content = $request->content;
@@ -100,6 +106,11 @@ class MessagesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // バリデーション
+        $request->validate([
+            'content' => 'required|max:255',
+        ]);
+        
         //dの値でメッセージを検索して取得
         $message = Message::findOrFail($id);
         // メッセージを更新
