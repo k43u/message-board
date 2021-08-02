@@ -15,13 +15,13 @@ class MessagesController extends Controller
      */
     public function index()
     {
-      // メッセージ一覧を取得
-        $messages = Message::all();
-        
-      // メッセージ一覧ビューでそれを表示
+      // メッセージ一覧をidの降順で取得
+        $messages = Message::orderBy('id', 'desc')->paginate(25);
+
+        // メッセージ一覧ビューでそれを表示
         return view('messages.index', [
             'messages' => $messages,
-         ]);
+        ]);
     }
 
     /**
@@ -49,12 +49,14 @@ class MessagesController extends Controller
     {
          // バリデーション
         $request->validate([
+            'title' => 'required|max:255', 
             'content' => 'required|max:255',
         ]);
 
         
         // メッセージを作成
         $message = new Message;
+        $message->title = $request->title;
         $message->content = $request->content;
         $message->save();
 
@@ -108,12 +110,14 @@ class MessagesController extends Controller
     {
         // バリデーション
         $request->validate([
+            'title' => 'required|max:255',
             'content' => 'required|max:255',
         ]);
         
         //dの値でメッセージを検索して取得
         $message = Message::findOrFail($id);
         // メッセージを更新
+        $message->title = $request->title;   
         $message->content = $request->content;
         $message->save();
 
